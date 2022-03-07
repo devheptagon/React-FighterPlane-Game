@@ -1,33 +1,52 @@
-import { FC, useEffect, useState, useCallback } from "react";
+import { FC, useEffect, useState, useRef, useCallback } from "react";
 import { Typography, Button, Stack, AppBar, Container } from "@mui/material";
-import { Direction, InitialSettings, ISettings } from "./types";
+import { Direction } from "./types";
 import "./index.css";
+import plane from "./assets/plane.png";
+import GameManager from "./utils/gameManager";
 
 const App: FC = () => {
-  const [settings, updateSettings] = useState<ISettings>({
-    ...InitialSettings,
-  });
+  const movingDirection = useRef<Direction>();
   const time = 0;
   const score = 0;
 
-  const changeDirection = useCallback(
-    (key: string) => {
-      if (!(key in Direction)) return;
-      updateSettings({ ...settings, CurrentDirection: key as Direction });
-    },
-    [settings]
-  );
+  const changeDirection = useCallback((key: string) => {
+    if (![Direction.ArrowLeft, Direction.ArrowRight].includes(key as Direction))
+      return;
+    movingDirection.current = key as Direction;
+  }, []);
+
+  const start = () => {
+    const tick = () => {
+      const plane: HTMLImageElement = document.querySelector("#plane")!;
+      const body = document.querySelector("body")!;
+      if (
+        plane.getBoundingClientRect().left <= 0 ||
+        plane.getBoundingClientRect().right >=
+          body.getBoundingClientRect().right
+      )
+        return;
+
+      const incrementer =
+        movingDirection.current === Direction.ArrowLeft ? -1 : +1;
+      plane.style.left =
+        plane.getBoundingClientRect().left + incrementer + "px";
+
+      window.requestAnimationFrame(tick);
+    };
+
+    tick();
+  };
 
   useEffect(() => {
     const keyListener = (e: KeyboardEvent) => {
       changeDirection(e.key);
     };
     document.addEventListener("keydown", keyListener);
+    start();
     return () => document.removeEventListener("keydown", keyListener);
   }, [changeDirection]);
 
-  const start = () => {};
-  console.log(settings.CurrentDirection);
   return (
     <Container>
       <AppBar>
@@ -37,7 +56,7 @@ const App: FC = () => {
           alignItems="center"
           p={2}
         >
-          <Typography variant="h5">90's Snake Game</Typography>
+          <Typography variant="h5">90's Plane Game</Typography>
           <Typography variant="subtitle1">Score: {score}</Typography>
           <Typography variant="subtitle1">Time: {time}</Typography>
           <Button variant="contained" color="secondary" onClick={start}>
@@ -45,11 +64,7 @@ const App: FC = () => {
           </Button>
         </Stack>
       </AppBar>
-      <div id="gameBoard">
-        {new Array(100).fill(null).map((el, i) => (
-          <div key={i} className="cell"></div>
-        ))}
-      </div>
+      <img src={plane} alt="plane" id="plane" className="left" />
     </Container>
   );
 };

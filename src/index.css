@@ -6,4 +6,40 @@ body {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+  position: relative;
 }
+
+#plane {
+  width: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+/*
+.left {
+  animation: left 100s;
+}
+
+.right {
+  animation: right 100s;
+}
+
+@keyframes left {
+  0% {
+    left: 50%;
+  }
+  100% {
+    left: -5000px;
+  }
+}
+
+@keyframes right {
+  0% {
+    left: 50%;
+  }
+  100% {
+    left: +5000px;
+  }
+}
+*/
