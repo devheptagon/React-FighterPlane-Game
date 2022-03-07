@@ -1,25 +1,48 @@
+import { Direction } from "../types";
+import PlaneManager from "./planeManager";
+
 export default class GameManager {
-  parent: HTMLElement;
-  plane: HTMLImageElement;
+  planeManager: PlaneManager;
   playing: boolean = false;
+  keyboardListener: (this: Document, ev: KeyboardEvent) => any;
 
-  constructor(_parent: HTMLElement, _plane: HTMLImageElement) {
-    this.parent = _parent;
-    this.plane = _plane;
+  constructor(container: HTMLElement, plane: HTMLImageElement) {
+    this.planeManager = new PlaneManager(container, plane);
+
+    this.keyboardListener = (e: KeyboardEvent) => {
+      this.handleKeyDown(e.key);
+    };
+    document.addEventListener("keydown", this.keyboardListener);
   }
 
-  private timerTick(tickCallback: Function) {
+  deconstructor() {
+    document.removeEventListener("keydown", this.keyboardListener);
+  }
+
+  private timerTick() {
     if (!this.playing) return;
-    tickCallback();
-    window.requestAnimationFrame(() => this.timerTick(tickCallback));
+    this.move();
+    window.requestAnimationFrame(this.timerTick.bind(this));
   }
 
-  startTimer(tickCallback: Function) {
+  startTimer() {
     this.playing = true;
-    this.timerTick(tickCallback);
+    this.timerTick();
   }
 
   stopTimer() {
     this.playing = false;
+  }
+
+  handleKeyDown(key: string) {
+    if (!this.playing) return;
+    if ([Direction.Left, Direction.Right].includes(key as Direction))
+      this.planeManager.changeDirection(key);
+    else if (key === Direction.Up) this.planeManager.speedUp();
+  }
+
+  move() {
+    if (!this.playing) return;
+    this.planeManager.move();
   }
 }

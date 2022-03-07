@@ -1,23 +1,10 @@
 export enum Direction {
-  ArrowLeft = "ArrowLeft",
-  ArrowRight = "ArrowRight",
-  ArrowUp = "ArrowUp",
-  ArrowDown = "ArrowDown",
+  Left = "ArrowLeft",
+  Right = "ArrowRight",
+  Up = "ArrowUp",
+  Down = "ArrowDown",
 }
 
-export interface ISettings {
-  ElapsedTime: number;
-  CurrentDirection: Direction;
-  GameOver: boolean;
-}
+export interface ISettings {}
 
-export const InitialSettings: ISettings = {
-  ElapsedTime: 0,
-  CurrentDirection: Direction.ArrowRight,
-  GameOver: false,
-};
-
-export const Messages = {
-  GameOverText: "Game Over!",
-  WinText: "You won!",
-};
+export const InitialSettings: ISettings = {};

@@ -2,7 +2,7 @@ body {
   margin: 0;
   height: 100vh;
   overflow: hidden;
-  background-image: url("./assets/space.jpg");
+  background-image: url("./assets/ocean.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -12,34 +12,6 @@ body {
 #plane {
   width: 100px;
   position: absolute;
-  top: 50%;
   left: 50%;
+  bottom: 20%;
 }
-
-/*
-.left {
-  animation: left 100s;
-}
-
-.right {
-  animation: right 100s;
-}
-
-@keyframes left {
-  0% {
-    left: 50%;
-  }
-  100% {
-    left: -5000px;
-  }
-}
-
-@keyframes right {
-  0% {
-    left: 50%;
-  }
-  100% {
-    left: +5000px;
-  }
-}
-*/
