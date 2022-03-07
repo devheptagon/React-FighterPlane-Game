@@ -2,11 +2,18 @@ body {
   margin: 0;
   height: 100vh;
   overflow: hidden;
+  position: relative;
+  background-color: black;
+}
+
+#gameBoard {
+  height: 100vh;
+  width: min(100vw, 800px);
+  overflow: hidden;
   background-image: url("./assets/ocean.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  position: relative;
 }
 
 #plane {
@@ -14,4 +21,17 @@ body {
   position: absolute;
   left: 50%;
   bottom: 20%;
+}
+
+.score {
+  font-size: x-large;
+  font-family: "Courier New", Courier, monospace;
+  color: yellow;
+}
+
+.fire {
+  width: 2px;
+  height: 20px;
+  position: absolute;
+  background-color: red;
 }

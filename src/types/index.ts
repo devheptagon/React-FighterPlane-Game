@@ -5,6 +5,29 @@ export enum Direction {
   Down = "ArrowDown",
 }
 
-export interface ISettings {}
+export enum GameState {
+  Playing = "Playing",
+  NotPlaying = "NotPlaying",
+}
 
-export const InitialSettings: ISettings = {};
+export interface ISoundManager {
+  planeSoundControls?: Function[];
+  scoreSoundControls?: Function[];
+  failSoundControls?: Function[];
+  winSoundControls?: Function[];
+}
+
+export interface IGameManager {
+  loadSoundControls(soundManager: ISoundManager): void;
+  startGame(): void;
+  stopGame(isFail: boolean): void;
+  increaseLevel(): void;
+}
+
+export interface IPlaneManager {
+  move(): void;
+  resetPosition(): void;
+  speedUp(): void;
+  changeDirection(key: string): void;
+  shoot(): void;
+}
