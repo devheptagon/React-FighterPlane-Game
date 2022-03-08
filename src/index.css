@@ -37,10 +37,11 @@ body {
 }
 
 .fire {
-  width: 2px;
-  height: 20px;
+  width: 5px;
+  height: 15px;
   position: absolute;
-  background-color: red;
+  background: radial-gradient(circle, yellow, black);
+  border-radius: 50%;
 }
 
 @keyframes MOVE_BG {

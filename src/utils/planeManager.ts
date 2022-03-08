@@ -50,7 +50,7 @@ export default class PlaneManager {
     el.id = "fireball" + this.fireballCounter++;
     el.classList.add("fire");
     el.style.left = (planeCoords?.right || 0) - 50 + "px";
-    el.style.top = (planeCoords?.top || 0) - 20 + "px";
+    el.style.top = (planeCoords?.top || 0) + 10 + "px";
     this.board.appendChild(el);
 
     const moveUp = () => {

@@ -1,3 +1,5 @@
+import { DebouncedFunc } from "lodash";
+import debounce from "lodash.debounce";
 import {
   Direction,
   ISoundManager,
@@ -7,6 +9,7 @@ import {
 import PlaneManager from "./planeManager";
 
 export default class GameManager implements IGameManager {
+  private debouncedShooting: DebouncedFunc<() => void> | null = null;
   private board: HTMLDivElement;
   private planeManager: IPlaneManager;
   private playing: boolean = false;
@@ -99,7 +102,14 @@ export default class GameManager implements IGameManager {
   }
 
   private shoot() {
-    this.planeManager.shoot();
-    this.playSound(this.soundManager.scoreSoundControls);
+    //prevents continous shooting by debouncing it
+    if (!this.debouncedShooting) {
+      this.debouncedShooting = debounce(() => {
+        this.planeManager.shoot();
+        this.playSound(this.soundManager.scoreSoundControls);
+      }, 100);
+    }
+
+    this.debouncedShooting();
   }
 }
