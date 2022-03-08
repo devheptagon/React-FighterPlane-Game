@@ -7,21 +7,25 @@ import {
 import PlaneManager from "./planeManager";
 
 export default class GameManager implements IGameManager {
+  private board: HTMLDivElement;
   private planeManager: IPlaneManager;
   private playing: boolean = false;
   private scoreEvent = new Event("score");
   private failEvent = new Event("fail");
   private soundManager: ISoundManager = {};
 
-  constructor(board: HTMLDivElement, plane: HTMLImageElement) {
-    this.planeManager = new PlaneManager(board, plane);
+  constructor(_board: HTMLDivElement, _plane: HTMLImageElement) {
+    this.board = _board;
+    this.planeManager = new PlaneManager(_board, _plane);
   }
 
   public startGame() {
+    this.board.classList.add("movingBackground");
     this.startTimer();
   }
 
   public stopGame(isFail: boolean) {
+    this.board.classList.remove("movingBackground");
     this.stopTimer();
     this.stopSound(this.soundManager.planeSoundControls);
     this.planeManager.resetPosition();

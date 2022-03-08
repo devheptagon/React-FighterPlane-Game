@@ -4,7 +4,7 @@ export default class PlaneManager {
   private board: HTMLElement;
   private plane: HTMLImageElement;
   private movingDirection: Direction = Direction.Right;
-  private speed: number = 5;
+  private speed: number = 1;
   private fireballCounter: number = 0;
 
   constructor(_board: HTMLDivElement, _plane: HTMLImageElement) {

@@ -11,9 +11,16 @@ body {
   width: min(100vw, 800px);
   overflow: hidden;
   background-image: url("./assets/ocean.jpg");
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
   background-position: center center;
   background-size: cover;
+}
+
+.movingBackground {
+  animation-name: MOVE_BG;
+  animation-duration: 300s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 #plane {
@@ -34,4 +41,13 @@ body {
   height: 20px;
   position: absolute;
   background-color: red;
+}
+
+@keyframes MOVE_BG {
+  from {
+    background-position: center center;
+  }
+  to {
+    background-position: center 2376px;
+  }
 }
