@@ -12,11 +12,9 @@ export default class GameManager implements IGameManager {
   private scoreEvent = new Event("score");
   private failEvent = new Event("fail");
   private soundManager: ISoundManager = {};
-  private keyboardListener: any;
 
   constructor(board: HTMLDivElement, plane: HTMLImageElement) {
     this.planeManager = new PlaneManager(board, plane);
-    this.addKeyboardListener();
   }
 
   public startGame() {
@@ -27,7 +25,6 @@ export default class GameManager implements IGameManager {
     this.stopTimer();
     this.stopSound(this.soundManager.planeSoundControls);
     this.planeManager.resetPosition();
-    this.removeKeyboardListener();
 
     if (isFail) {
       this.playSound(this.soundManager.failSoundControls);
@@ -46,6 +43,13 @@ export default class GameManager implements IGameManager {
 
   public increaseLevel(): void {
     this.planeManager.speedUp();
+  }
+
+  public handleKeyDown(key: string) {
+    if (!this.playing) return;
+    if ([Direction.Left, Direction.Right].includes(key as Direction))
+      this.planeManager.changeDirection(key);
+    else if (key === Direction.Up) this.shoot();
   }
 
   private checkForScore() {
@@ -71,13 +75,6 @@ export default class GameManager implements IGameManager {
     this.playing = false;
   }
 
-  private handleKeyDown(key: string) {
-    if (!this.playing) return;
-    if ([Direction.Left, Direction.Right].includes(key as Direction))
-      this.planeManager.changeDirection(key);
-    else if (key === Direction.Up) this.shoot();
-  }
-
   private move() {
     if (!this.playing) return;
     this.planeManager.move();
@@ -95,17 +92,6 @@ export default class GameManager implements IGameManager {
       const [play, stop] = soundControls;
       stop();
     }
-  }
-
-  private addKeyboardListener() {
-    this.keyboardListener = (e: KeyboardEvent) => {
-      this.handleKeyDown(e.key);
-    };
-    document.addEventListener("keydown", this.keyboardListener);
-  }
-
-  private removeKeyboardListener() {
-    document.removeEventListener("keydown", this.keyboardListener);
   }
 
   private shoot() {

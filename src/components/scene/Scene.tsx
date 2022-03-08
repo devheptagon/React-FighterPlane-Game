@@ -33,7 +33,11 @@ const Scene: FC = () => {
     handleFail(gameManagerRef.current);
   }, []);
 
-  useEventListeners(onScore, onFail);
+  const onKeyDown = (e: KeyboardEvent) => {
+    gameManagerRef.current?.handleKeyDown(e.key);
+  };
+
+  useEventListeners(onKeyDown, onScore, onFail);
 
   useEffect(() => {
     const board: HTMLDivElement = document.querySelector("#gameBoard")!;

@@ -22,6 +22,7 @@ export interface IGameManager {
   startGame(): void;
   stopGame(isFail: boolean): void;
   increaseLevel(): void;
+  handleKeyDown(key: string): void;
 }
 
 export interface IPlaneManager {
