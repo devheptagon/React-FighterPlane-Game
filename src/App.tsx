@@ -1,12 +1,13 @@
 import { FC } from "react";
-import { Container } from "@mui/material";
 import Scene from "components/scene/Scene";
+import ScoreBoard from "components/score-board/ScoreBoard";
 
 const App: FC = () => {
   return (
-    <Container id="gameBoard">
+    <>
+      <ScoreBoard />
       <Scene />
-    </Container>
+    </>
   );
 };
 

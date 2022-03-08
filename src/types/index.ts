@@ -6,8 +6,10 @@ export enum Direction {
 }
 
 export enum GameState {
+  NotStarted = "NotStarted",
   Playing = "Playing",
-  NotPlaying = "NotPlaying",
+  Failed = "Failed",
+  Won = "Won",
 }
 
 export interface ISoundManager {
@@ -17,18 +19,21 @@ export interface ISoundManager {
   winSoundControls?: Function[];
 }
 
-export interface IGameManager {
-  loadSoundControls(soundManager: ISoundManager): void;
-  startGame(): void;
-  stopGame(isFail: boolean): void;
-  increaseLevel(): void;
-  handleKeyDown(key: string): void;
+export interface IStore {
+  score: number;
+  elapsedTime: number;
+  speed: number;
+  gameState: GameState;
+  fireballs: IFireball[];
+  increaseScore(): void;
+  increaseTime(): void;
+  updateGameState(newState: GameState): void;
+  createFireball(left: number, top: number): void;
+  destroyFireball(id: string): void;
 }
 
-export interface IPlaneManager {
-  move(): void;
-  resetPosition(): void;
-  speedUp(): void;
-  changeDirection(key: string): void;
-  shoot(): void;
+export interface IFireball {
+  id: string;
+  left: number;
+  top: number;
 }

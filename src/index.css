@@ -4,6 +4,8 @@ body {
   overflow: hidden;
   position: relative;
   background-color: black;
+  display: grid;
+  place-items: center;
 }
 
 #gameBoard {
@@ -14,6 +16,8 @@ body {
   background-repeat: repeat-y;
   background-position: center center;
   background-size: cover;
+  border: 10px solid #eee;
+  box-sizing: border-box;
 }
 
 .movingBackground {
@@ -26,7 +30,7 @@ body {
 #plane {
   width: 100px;
   position: absolute;
-  left: 50%;
+  left: calc(50% - 40px);
   bottom: 20%;
 }
 

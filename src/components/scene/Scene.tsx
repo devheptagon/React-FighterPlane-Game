@@ -1,83 +1,32 @@
-import { FC, useEffect, useState, useRef, useCallback } from "react";
-import planeImage from "assets/plane.png";
-import GameManager from "utils/gameManager";
-import useEventListeners from "utils/useEventListeners";
-import { GameState, IGameManager } from "types";
-import ScoreBoard from "../ScoreBoard";
-import AudioControls from "../AudioControls";
-import {
-  handleFail,
-  handleGameWin,
-  handleLevelIncrease,
-  handleStart,
-} from "./scene.helper";
+import { FC, useRef } from "react";
+import { observer } from "mobx-react";
+import useAudioControls from "utils/useAudioControls";
+import GameManager from "../game-manager/GameManager";
+import FireBalls from "../fireballs/FireBalls";
+import Plane from "../plane/Plane";
+import store from "mobx/store";
+import { GameState } from "types";
 
-const Scene: FC = () => {
-  const [status, setStatus] = useState<GameState>(GameState.NotPlaying);
-  const [score, setScore] = useState<number>(0);
-  const gameManagerRef = useRef<IGameManager>();
-
-  const onStart = useCallback(() => {
-    setStatus(GameState.Playing);
-    handleStart(gameManagerRef.current);
-  }, []);
-
-  const onScore = useCallback(() => {
-    const newScore = score + 100;
-    setScore(newScore);
-    if (newScore % 200 === 0) handleLevelIncrease(gameManagerRef.current);
-    if (newScore > 1000) handleGameWin(gameManagerRef.current);
-  }, [setScore, score]);
-
-  const onFail = useCallback(() => {
-    handleFail(gameManagerRef.current);
-  }, []);
-
-  const onKeyDown = (e: KeyboardEvent) => {
-    gameManagerRef.current?.handleKeyDown(e.key);
-  };
-
-  useEventListeners(onKeyDown, onScore, onFail);
-
-  useEffect(() => {
-    const board: HTMLDivElement = document.querySelector("#gameBoard")!;
-    const plane: HTMLImageElement = document.querySelector("#plane")!;
-    gameManagerRef.current = new GameManager(board, plane);
-  }, []);
+const Scene: FC = observer(() => {
+  const boardRef = useRef<HTMLDivElement>(null);
+  const planeRef = useRef<HTMLImageElement>(null);
+  useAudioControls();
 
   return (
-    <>
-      <ScoreBoard
-        score={score}
-        onStart={onStart}
-        isPlaying={status === GameState.Playing}
-      />
-
-      <img id="plane" src={planeImage} alt="plane" />
-      <AudioControls gameManager={gameManagerRef.current} />
-
-      {/*       <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <button onClick={onFail}>stop</button> */}
-
-      {/*       <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <button onClick={onSCore}>score</button> */}
+    <div id="gameBoard" ref={boardRef}>
+      <GameManager board={boardRef.current} plane={planeRef.current} />
+      <Plane ref={planeRef} />
+      <FireBalls />
 
       <br />
       <br />
       <br />
       <br />
-      <br />
-      <button onClick={() => handleGameWin(gameManagerRef.current)}>win</button>
-    </>
+      <button onClick={() => store.updateGameState(GameState.Failed)}>
+        stop
+      </button>
+    </div>
   );
-};
+});
 
 export default Scene;
