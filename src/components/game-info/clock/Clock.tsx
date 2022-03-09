@@ -1,8 +1,8 @@
 import { FC, useEffect } from "react";
 import { observer } from "mobx-react";
-import { Typography } from "@mui/material";
 import store from "mobx/store";
 import { GameState } from "types";
+import styles from "./Clock.module.scss";
 
 const Clock: FC = observer(() => {
   const { gameState, elapsedTime, increaseTime } = store;
@@ -22,9 +22,9 @@ const Clock: FC = observer(() => {
   }, [gameState, increaseTime]);
 
   return (
-    <Typography variant="subtitle1">
-      Time: <span className="score">{elapsedTime}</span> sec
-    </Typography>
+    <div className={styles.clock}>
+      <span>{elapsedTime}</span>
+    </div>
   );
 });
 

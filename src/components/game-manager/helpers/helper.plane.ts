@@ -2,6 +2,12 @@ import debounce from "lodash.debounce";
 import { DebouncedFunc } from "lodash";
 import { Direction, ISoundManager } from "types";
 import { playSound } from "utils";
+import {
+  FIREBALL_START_LEFT_POS_MARGIN,
+  FIREBALL_START_TOP_POS_MARGIN,
+  PLANE_MAX_MOVE_AMOUNT,
+  PLANE_MOVE_AMOUNT,
+} from "utils/settings";
 
 let debouncedShooting: DebouncedFunc<() => void> | null = null;
 
@@ -14,8 +20,8 @@ export const handleShooting = (
   if (!debouncedShooting) {
     debouncedShooting = debounce(() => {
       const planeCoords = plane?.getBoundingClientRect();
-      const left = (planeCoords?.right || 0) - 50;
-      const top = (planeCoords?.top || 0) + 20;
+      const left = (planeCoords?.right || 0) - FIREBALL_START_LEFT_POS_MARGIN;
+      const top = (planeCoords?.top || 0) + FIREBALL_START_TOP_POS_MARGIN;
       createFireball(left, top);
       playSound(soundManager.scoreSoundControls);
     }, 100);
@@ -27,7 +33,7 @@ export const handlePlaneMove = (
   plane: HTMLImageElement,
   board: HTMLDivElement,
   movingDirection: Direction,
-  speed: number,
+  level: number,
   toggleDirection: Function
 ): void => {
   if (!plane || !board) return;
@@ -47,7 +53,12 @@ export const handlePlaneMove = (
       planeCoords.left + (isTouchingLeftWall ? -10 : +10) + "px";
     toggleDirection();
   } else {
-    const incrementer = movingDirection === Direction.Left ? -speed : +speed;
+    const moveAmount = Math.min(
+      PLANE_MOVE_AMOUNT * level * 2,
+      PLANE_MAX_MOVE_AMOUNT
+    );
+    const incrementer =
+      movingDirection === Direction.Left ? -moveAmount : +moveAmount;
     plane.style.left = planeCoords.left + incrementer + "px";
   }
 };

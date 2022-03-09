@@ -1,15 +1,14 @@
 import { FC } from "react";
-import { Typography, Button, Stack, AppBar } from "@mui/material";
-import store from "mobx/store";
 import { observer } from "mobx-react";
+import { Button, Stack, AppBar } from "@mui/material";
+import store from "mobx/store";
 import { GameState } from "types";
-import Clock from "./Clock";
+import styles from "./Header.module.scss";
 
-const ScoreBoard: FC = observer(() => {
+const Header: FC = observer(() => {
   const onStart = (): void => {
     store.updateGameState(GameState.Playing);
   };
-
   return (
     <AppBar color="secondary">
       <Stack
@@ -18,17 +17,13 @@ const ScoreBoard: FC = observer(() => {
         alignItems="center"
         p={2}
       >
-        <Typography variant="h5">90's Plane Game</Typography>
-        <Typography variant="subtitle1">
-          Score: <span className="score">{store.score}</span> pts
-        </Typography>
-        <Clock />
+        <span className={styles.title}>Fighter Plane</span>
         {store.gameState === GameState.Playing ? (
-          <Button variant="contained" color="primary" disabled>
+          <Button variant="contained" color="success" disabled>
             Playing...
           </Button>
         ) : (
-          <Button variant="contained" color="primary" onClick={onStart}>
+          <Button variant="contained" color="warning" onClick={onStart}>
             Start
           </Button>
         )}
@@ -37,4 +32,4 @@ const ScoreBoard: FC = observer(() => {
   );
 });
 
-export default ScoreBoard;
+export default Header;
