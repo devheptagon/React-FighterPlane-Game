@@ -25,15 +25,22 @@ export interface IStore {
   speed: number;
   gameState: GameState;
   fireballs: IFireball[];
+  aliens: IAlien[];
   increaseScore(): void;
   increaseTime(): void;
   updateGameState(newState: GameState): void;
   createFireball(left: number, top: number): void;
   destroyFireball(id: string): void;
+  createAlien(left: number, top: number): void;
+  destroyAlien(id: string): void;
 }
 
-export interface IFireball {
+export interface IMovingObject {
   id: string;
   left: number;
   top: number;
 }
+
+export interface IFireball extends IMovingObject {}
+
+export interface IAlien extends IMovingObject {}

@@ -48,6 +48,12 @@ body {
   border-radius: 50%;
 }
 
+.alien {
+  position: absolute;
+  width: 40px;
+  height: auto;
+}
+
 @keyframes MOVE_BG {
   from {
     background-position: center center;

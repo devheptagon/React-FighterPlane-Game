@@ -65,7 +65,7 @@ const GameManager: FC<{
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!plane) return;
+      if (!plane || gameState !== GameState.Playing) return;
 
       if ([Direction.Left, Direction.Right].includes(e.key as Direction)) {
         movingDirection.current = e.key as Direction;
@@ -73,7 +73,7 @@ const GameManager: FC<{
         handleShooting(plane, store.createFireball, soundManager);
       }
     },
-    [plane, soundManager]
+    [plane, soundManager, gameState]
   );
 
   /*   const handleScore = useCallback(() => {

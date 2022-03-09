@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from "mobx";
 import { random } from "lodash";
-import { GameState, IFireball, IStore } from "types";
+import { GameState, IAlien, IFireball, IMovingObject, IStore } from "types";
 
 class Store implements IStore {
   public score: number = 0;
@@ -8,6 +8,7 @@ class Store implements IStore {
   public speed: number = 2;
   public gameState: GameState = GameState.NotStarted;
   public fireballs: IFireball[] = [];
+  public aliens: IAlien[] = [];
 
   constructor() {
     makeObservable(this, {
@@ -16,12 +17,15 @@ class Store implements IStore {
       gameState: observable,
       speed: observable,
       fireballs: observable,
+      aliens: observable,
 
       increaseScore: action,
       increaseTime: action,
       updateGameState: action,
       createFireball: action,
       destroyFireball: action,
+      createAlien: action,
+      destroyAlien: action,
     });
   }
 
@@ -45,16 +49,37 @@ class Store implements IStore {
   };
 
   public createFireball = (left: number, top: number): void => {
-    const fireball: IFireball = {
-      id: "fireball_" + this.fireballs.length + random(100, 9999),
-      left,
-      top,
-    };
-    this.fireballs.push(fireball);
+    this.createMovingObject("fireball_", this.fireballs, left, top);
   };
 
   public destroyFireball = (id: string): void => {
-    this.fireballs = this.fireballs.filter((el) => el.id !== id);
+    this.fireballs = this.destroyMovingObject(id, this.fireballs);
+  };
+
+  public createAlien = (left: number, top: number): void => {
+    this.createMovingObject("alien_", this.aliens, left, top);
+  };
+
+  public destroyAlien = (id: string): void => {
+    this.aliens = this.destroyMovingObject(id, this.aliens);
+  };
+
+  private createMovingObject = (
+    prefix: string,
+    container: IMovingObject[],
+    left: number,
+    top: number
+  ) => {
+    const movingObject: IMovingObject = {
+      id: prefix + container.length + random(100, 9999),
+      left,
+      top,
+    };
+    container.push(movingObject);
+  };
+
+  private destroyMovingObject = (id: string, container: IMovingObject[]) => {
+    return container.filter((el) => el.id !== id);
   };
 }
 
