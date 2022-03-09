@@ -1,29 +1,41 @@
-import { FC, useEffect, useState, useCallback } from "react";
+import { FC, useLayoutEffect, useState, useCallback, useRef } from "react";
 import store from "mobx/store";
+import { FIREBALL_MOVE_AMOUNT } from "utils/settings";
+import { ILocation } from "types";
+import styles from "./Fireballs.module.scss";
 
-const FireBallItem: FC<{ id: string; top: number; left: number }> = (props) => {
+const FireBallItem: FC<{ id: string } & ILocation> = (props) => {
   const { id, left, top } = props;
+  const { destroyFireball } = store;
   const [newTop, setNewTop] = useState(top);
+  const frameTimer = useRef(0);
 
   const moveUp = useCallback(
     (currentTop: number) => {
       if (currentTop > 0) {
-        const nextTop = currentTop - 20;
+        const nextTop = currentTop - FIREBALL_MOVE_AMOUNT;
         setNewTop(nextTop);
-        window.requestAnimationFrame(() => moveUp(nextTop));
+        frameTimer.current = window.requestAnimationFrame(() =>
+          moveUp(nextTop)
+        );
       } else {
-        store.destroyFireball(id);
+        destroyFireball(id);
       }
     },
-    [id]
+    [id, destroyFireball]
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     moveUp(top);
-    return () => store.destroyFireball(id);
-  }, [id, top, moveUp]);
+    return () => {
+      if (frameTimer.current) cancelAnimationFrame(frameTimer.current);
+      destroyFireball(id);
+    };
+  }, [id, top, moveUp, destroyFireball]);
 
-  return <div className="fire" id={id} style={{ left, top: newTop }}></div>;
+  return (
+    <div className={styles.fire} id={id} style={{ left, top: newTop }}></div>
+  );
 };
 
 export default FireBallItem;

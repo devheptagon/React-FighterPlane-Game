@@ -22,10 +22,12 @@ export interface ISoundManager {
 export interface IStore {
   score: number;
   elapsedTime: number;
-  speed: number;
+  level: number;
   gameState: GameState;
   fireballs: IFireball[];
   aliens: IAlien[];
+  health: number;
+
   increaseScore(): void;
   increaseTime(): void;
   updateGameState(newState: GameState): void;
@@ -33,12 +35,19 @@ export interface IStore {
   destroyFireball(id: string): void;
   createAlien(left: number, top: number): void;
   destroyAlien(id: string): void;
+  decreaseHealth(): void;
+  increaseLevel(): void;
 }
 
-export interface IMovingObject {
-  id: string;
+export interface ILocation {
   left: number;
   top: number;
+  right?: number;
+  bottom?: number;
+}
+
+export interface IMovingObject extends ILocation {
+  id: string;
 }
 
 export interface IFireball extends IMovingObject {}

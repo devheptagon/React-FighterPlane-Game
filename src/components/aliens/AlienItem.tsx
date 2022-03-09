@@ -1,39 +1,62 @@
+import { FC, useCallback, useLayoutEffect, useRef, useState } from "react";
 import alienImage from "assets/alien.png";
-import { FC, useCallback, useEffect, useState } from "react";
 import store from "mobx/store";
-import { GameState } from "types";
+import { ALIEN_MOVE_AMOUNT, ALIEN_END_BOTTOM_POS_MARGIN } from "utils/settings";
+import { ILocation } from "types";
+import styles from "./Aliens.module.scss";
 
-const AlienItem: FC<{
-  id: string;
-  top: number;
-  left: number;
-  boardBottomPos: number;
-}> = (props) => {
-  const { id, left, top, boardBottomPos } = props;
+const AlienItem: FC<
+  {
+    id: string;
+    boardBottomPos: number;
+  } & ILocation
+> = (props) => {
+  const { id, boardBottomPos, left, top } = props;
+  const { destroyAlien, decreaseHealth } = store;
   const [newTop, setNewTop] = useState(top);
+
+  let selfDestroyTimer = useRef<number>(0);
+  let moveDownTimer = useRef<number>(0);
+
+  const delayedSelfDestroy = useCallback(
+    (id) => {
+      if (selfDestroyTimer.current) clearTimeout(selfDestroyTimer.current);
+      selfDestroyTimer.current = window.setTimeout(() => {
+        destroyAlien(id);
+        decreaseHealth();
+      }, 250);
+    },
+    [decreaseHealth, destroyAlien]
+  );
 
   const moveDown = useCallback(
     (currentTop: number) => {
-      if (currentTop < boardBottomPos - 30) {
-        const nextTop = currentTop + 1;
+      if (currentTop < boardBottomPos - ALIEN_END_BOTTOM_POS_MARGIN) {
+        const nextTop = currentTop + ALIEN_MOVE_AMOUNT;
         setNewTop(nextTop);
-        window.requestAnimationFrame(() => moveDown(nextTop));
+        moveDownTimer.current = window.requestAnimationFrame(() =>
+          moveDown(nextTop)
+        );
       } else {
-        store.destroyAlien(id);
-        //store.updateGameState(GameState.Failed);
+        delayedSelfDestroy(id);
       }
     },
-    [id, boardBottomPos]
+    [id, boardBottomPos, delayedSelfDestroy]
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     moveDown(top);
-    return () => store.destroyAlien(id);
-  }, [id, top, moveDown]);
+    return () => {
+      if (moveDownTimer.current)
+        window.cancelAnimationFrame(moveDownTimer.current);
+      if (selfDestroyTimer.current) clearTimeout(selfDestroyTimer.current);
+      destroyAlien(id);
+    };
+  }, [id, top, moveDown, destroyAlien]);
 
   return (
     <img
-      className="alien"
+      className={styles.alien}
       id={id}
       style={{ left, top: newTop }}
       src={alienImage}

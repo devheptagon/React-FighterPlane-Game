@@ -1,12 +1,11 @@
 import { FC, useRef } from "react";
 import { observer } from "mobx-react";
 import useAudioControls from "utils/useAudioControls";
-import GameManager from "../game-manager/GameManager";
-import FireBalls from "../fireballs/FireBalls";
-import Aliens from "../aliens/Aliens";
-import Plane from "../plane/Plane";
-import store from "mobx/store";
-import { GameState } from "types";
+import GameManager from "components/game-manager/GameManager";
+import FireBalls from "components/fireballs/FireBalls";
+import Aliens from "components/aliens/Aliens";
+import Plane from "components/plane/Plane";
+import styles from "./Scene.module.scss";
 
 const Scene: FC = observer(() => {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -14,19 +13,11 @@ const Scene: FC = observer(() => {
   useAudioControls();
 
   return (
-    <div id="gameBoard" ref={boardRef}>
+    <div id="gameBoard" ref={boardRef} className={styles.gameBoard}>
       <GameManager board={boardRef.current} plane={planeRef.current} />
       <Plane ref={planeRef} />
       <FireBalls />
       <Aliens board={boardRef.current} />
-
-      {/* <br />
-      <br />
-      <br />
-      <br />
-      <button onClick={() => store.updateGameState(GameState.Failed)}>
-        stop
-      </button> */}
     </div>
   );
 });

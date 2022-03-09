@@ -11,6 +11,7 @@ import {
   handlePlaneMove,
   handleShooting,
 } from "./helpers";
+import { handleScore } from "./helpers/helper.core";
 
 const GameManager: FC<{
   board: HTMLDivElement | null;
@@ -19,7 +20,7 @@ const GameManager: FC<{
   const soundManager: ISoundManager = useAudioControls();
   const movingDirection = useRef(Direction.Left);
   const { board, plane } = props;
-  const { gameState } = store;
+  const { gameState, increaseScore, destroyAlien } = store;
 
   const toggleDirection = useCallback(() => {
     movingDirection.current =
@@ -36,16 +37,21 @@ const GameManager: FC<{
       plane,
       board,
       movingDirection.current,
-      store.speed,
+      store.level,
       toggleDirection
     );
   }, [gameState, board, plane, toggleDirection]);
 
+  const checkScore = useCallback(() => {
+    handleScore(increaseScore, destroyAlien);
+  }, [increaseScore, destroyAlien]);
+
   const timerTick = useCallback(() => {
     if (gameState !== GameState.Playing) return;
     movePlane();
+    checkScore();
     window.requestAnimationFrame(timerTick);
-  }, [gameState, movePlane]);
+  }, [gameState, movePlane, checkScore]);
 
   const startTimer = useCallback(() => {
     timerTick();
@@ -75,10 +81,6 @@ const GameManager: FC<{
     },
     [plane, soundManager, gameState]
   );
-
-  /*   const handleScore = useCallback(() => {
-    store.increaseScore();
-  }, []); */
 
   useEventListeners(handleKeyDown);
 

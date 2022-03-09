@@ -8,7 +8,7 @@ const FireBalls: FC = observer(() => {
   return (
     <>
       {store.fireballs.map((el: IFireball) => (
-        <FireBallItem key={el.id} {...el} />
+        <FireBallItem key={el.id} id={el.id} left={el.left} top={el.top} />
       ))}
     </>
   );

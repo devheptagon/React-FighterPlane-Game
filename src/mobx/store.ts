@@ -1,23 +1,32 @@
 import { action, makeObservable, observable } from "mobx";
-import { random } from "lodash";
+import { random, delay } from "lodash";
 import { GameState, IAlien, IFireball, IMovingObject, IStore } from "types";
+import {
+  INITIAL_HEALTH_AMOUNT,
+  POINTS_FOR_LEVEL_UP,
+  POINTS_PER_SHOOT,
+  POINTS_FOR_WIN,
+  TIMEOUT_LIMIT,
+} from "utils/settings";
 
 class Store implements IStore {
   public score: number = 0;
   public elapsedTime: number = 0;
-  public speed: number = 2;
+  public level: number = 1;
   public gameState: GameState = GameState.NotStarted;
   public fireballs: IFireball[] = [];
   public aliens: IAlien[] = [];
+  public health: number = INITIAL_HEALTH_AMOUNT;
 
   constructor() {
     makeObservable(this, {
       score: observable,
       elapsedTime: observable,
       gameState: observable,
-      speed: observable,
+      level: observable,
       fireballs: observable,
       aliens: observable,
+      health: observable,
 
       increaseScore: action,
       increaseTime: action,
@@ -26,22 +35,24 @@ class Store implements IStore {
       destroyFireball: action,
       createAlien: action,
       destroyAlien: action,
+      decreaseHealth: action,
     });
   }
 
   public increaseScore = (): void => {
-    this.score += 100;
-    if (this.score % 200 === 0) this.increaseSpeed();
-    if (this.score >= 5000) this.updateGameState(GameState.Won);
+    this.score += POINTS_PER_SHOOT;
+    if (this.score % POINTS_FOR_LEVEL_UP === 0) this.increaseLevel();
+    if (this.score >= POINTS_FOR_WIN) this.updateGameState(GameState.Won);
   };
 
   public increaseTime = (): void => {
     this.elapsedTime += 1;
-    if (this.elapsedTime >= 600) this.updateGameState(GameState.Failed);
+    if (this.elapsedTime >= TIMEOUT_LIMIT)
+      this.updateGameState(GameState.Failed);
   };
 
-  public increaseSpeed = (): void => {
-    this.speed += 1;
+  public increaseLevel = (): void => {
+    this.level += 1;
   };
 
   public updateGameState = (newState: GameState): void => {
@@ -62,6 +73,14 @@ class Store implements IStore {
 
   public destroyAlien = (id: string): void => {
     this.aliens = this.destroyMovingObject(id, this.aliens);
+  };
+
+  public decreaseHealth = (): void => {
+    this.health--;
+    //wait for UI to update itself
+    if (this.health === 0) {
+      delay(() => this.updateGameState(GameState.Failed), 500);
+    }
   };
 
   private createMovingObject = (
