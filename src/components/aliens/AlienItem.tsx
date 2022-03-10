@@ -15,8 +15,8 @@ const AlienItem: FC<
   const { destroyAlien, decreaseHealth } = store;
   const [newTop, setNewTop] = useState(top);
 
-  let selfDestroyTimer = useRef<number>(0);
-  let moveDownTimer = useRef<number>(0);
+  const selfDestroyTimer = useRef<number>(0);
+  const moveDownTimer = useRef<number>(0);
 
   const delayedSelfDestroy = useCallback(
     (id) => {

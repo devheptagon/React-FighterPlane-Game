@@ -1,9 +1,9 @@
 @import "styles/shared.scss";
-@import "components/game-info/game-info.shared.scss";
+@import "components/info/info.shared.scss";
 
-.scoreBoard {
+.clock {
   @extend .boxBackground;
-  right: 117px;
+  right: 11px;
   bottom: 11px;
 
   & > span {
@@ -12,6 +12,6 @@
 
   &::after {
     @extend .infoSpan-postfix;
-    content: "pts";
+    content: "sec";
   }
 }

@@ -5,7 +5,7 @@ import { INITIAL_HEALTH_AMOUNT } from "utils/settings";
 import styles from "./Health.module.scss";
 
 const HealthItem: FC<{ alive: boolean }> = (props) => (
-  <span className={props.alive ? styles.alive : styles.dead}>✈</span>
+  <span className={props.alive ? styles.alive : styles.dead}></span>
 );
 
 const Health: FC = observer(() => {

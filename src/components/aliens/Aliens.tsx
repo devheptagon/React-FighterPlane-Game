@@ -18,7 +18,7 @@ const Aliens: FC<{ board: HTMLDivElement | null }> = observer((props) => {
     bottom: 0,
   };
   const { gameState, level, createAlien } = store;
-  let alienCreatingTimer = useRef<number>(0);
+  const alienCreatingTimer = useRef<number>(0);
 
   const createNewAlien = useCallback(() => {
     const alienLeft = random(

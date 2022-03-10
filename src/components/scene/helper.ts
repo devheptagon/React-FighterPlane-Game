@@ -4,12 +4,12 @@ import sceneStyles from "components/scene/Scene.module.scss";
 
 export const handleGameStart = (
   board: HTMLDivElement,
-  startTimer: Function,
+  timerTick: Function,
   soundManager: ISoundManager
 ): void => {
   //background slides down to achieve perception of movement
   board?.classList.add(sceneStyles.movingBackground);
-  startTimer();
+  timerTick();
   playSound(soundManager.planeSoundControls);
 };
 
